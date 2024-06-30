@@ -204,7 +204,9 @@ def combine_news_data(base_dir, start_date, end_date):
     combined_df = pd.concat(dataframes, ignore_index=True)
 
     combined_df = clean_dates(combined_df)
-
+    print(f"Length Before drooping NA : {len(combined_df)}")
+    combined_df.dropna(subset='content', inplace=True)
+    print(f"length after dropping NA: {len(combined_df)}")
     combined_df.to_csv('bitcoin_news_data.csv')
 
     print(f"All bitcoin news data saved in 'bitcoin_news_data.csv' for time range {start_date} to {end_date}.")
