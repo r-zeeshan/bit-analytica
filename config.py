@@ -1,6 +1,8 @@
+### Define the base LLM for the Text Sentiment Analysis
+LLM = 'yiyanghkust/finbert-tone'
+
 ### Define the base URL for the GDELT GEO 2.0 API
 BASE_URL = "https://api.gdeltproject.org/api/v2/doc/doc"
-
 
 ### DEFINING SOME COMPLEX QUERIES REGARDING BTC NEWS OR GLOBAL EVENTS THAT MAY AFFECT BTC PRICE
 QUERIES = {
