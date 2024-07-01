@@ -25,10 +25,6 @@ def clean_text(text):
     Returns:
         str: The cleaned text.
     """
-    nltk.download('punkt')
-    nltk.download('stopwords')
-    nltk.download('wordnet')
-
     lemmatizer = WordNetLemmatizer()
 
     text = text.lower()  # Lowercase
@@ -104,6 +100,7 @@ def aggregate_sentiment(df, impact_weights):
         pandas.DataFrame: The aggregated DataFrame with the calculated aggregated sentiment values.
 
     """
+    df.rename_axis('Date', inplace=True)
     df['i_category'] = df['category'].map(impact_weights)
     df['w_sentiment'] = df['sentiment'] * df['i_category']
 
@@ -112,5 +109,5 @@ def aggregate_sentiment(df, impact_weights):
             "aggregated_sentiment" : x['w_sentiment'].sum() / x['i_category'].sum()
         })
     ).reset_index()
-
+    aggregated_df.set_index('Date', inplace=True)
     return aggregated_df
