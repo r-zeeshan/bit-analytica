@@ -23,3 +23,19 @@ QUERIES = {
 ### Defining the common parameters
 MODE = "ArtList"
 FORMAT = "json"
+
+IMPACT_WEIGHTS = {
+    'regulatory_news': 13,
+    'legal_actions': 12,
+    'market_adoption': 11,
+    'exchange_news': 10,
+    'institutional_involvement': 9,
+    'macro_economic_trends': 8,
+    'geopolitical_events': 7,
+    'blockchain_innovations': 6,
+    'market_movements': 5,
+    'etf_news': 4,
+    'media_coverage': 3,
+    'security_enhancements': 2,
+    'social_media_trends': 1
+}
