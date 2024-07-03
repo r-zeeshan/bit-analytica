@@ -1,5 +1,4 @@
 import pandas as pd
-import plotly.graph_objects as go
 
 def calculate_sma(data, window):
     """
@@ -137,68 +136,3 @@ def calculate_obv(data):
     obv = (data['Volume'] * ((data['Close'] > data['Close'].shift()).astype(int) - 
                              (data['Close'] < data['Close'].shift()).astype(int))).cumsum()
     return obv
-
-
-def add_candlestick_trace(fig, data):
-    fig.add_trace(go.Candlestick(
-        x=data.index,
-        open=data['Open'],
-        high=data['High'],
-        low=data['Low'],
-        close=data['Close'],
-        name="Candlestick"
-    ))
-
-
-TEMPLATE = 'plotly_dark'
-def plot_with_sma_or_ema(data, start_date, end_date, column):
-    data = data.loc[start_date:end_date]
-
-    fig = go.Figure()
-    add_candlestick_trace(fig, data)
-
-    fig.add_trace(go.Scatter(
-        x=data.index,
-        y=data[column],
-        modes='lines',
-        name=column   
-    ))
-
-    fig.update_layout(
-        title=f"Bitcoin Candlestick with {column}",
-        yaxis_title='Price (USD)',
-        xaxis_title='Date',
-        template=TEMPLATE
-    )
-
-    return fig
-
-
-def plot_with_rsi(data, start_date, end_date, column):
-    data = data.loc[start_date:end_date]
-
-    fig = go.Figure()
-    add_candlestick_trace(fig, data)
-
-    fig.add_trace(go.Scatter(
-        x=data.index,
-        y=data[column],
-        mode='lines',
-        name=column,
-        yaxis='y2'
-    ))
-
-    fig.update_layout(
-        title=f'Bitcoin Candlestick with {column}',
-        yaxis_title = "Price (USD)",
-        xaxis_title = "Date",
-        template=TEMPLATE,
-        yaxis2=dict(
-            title='RSI',
-            overlaying='y',
-            side='right',
-            range=[0, 100]
-        )        
-    )
-
-    return fig
