@@ -46,7 +46,7 @@ def plot_with_sma_or_ema(data, start_date, end_date, column):
     fig.add_trace(go.Scatter(
         x=data.index,
         y=data[column],
-        modes='lines',
+        mode='lines',
         name=column   
     ))
 
