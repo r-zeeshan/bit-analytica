@@ -73,6 +73,17 @@ def calculat_macd(data, short_window=12, long_window=26, signal_window=9):
 
 
 def calculate_bollinger_bands(data, window=20, num_std=2):
+    """
+    Calculate Bollinger Bands for a given dataset.
+
+    Parameters:
+    - data (DataFrame): The input dataset.
+    - window (int): The window size for calculating the simple moving average (SMA). Default is 20.
+    - num_std (int): The number of standard deviations to use for calculating the upper and lower bands. Default is 2.
+
+    Returns:
+    - DataFrame: A DataFrame containing the Bollinger Bands, including the SMA, upper band, and lower band.
+    """
     sma = calculate_sma(data, window)
     rolling_std = data['Close'].rolling(window=window).std()
     upper_band = sma + (rolling_std * num_std)
