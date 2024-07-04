@@ -282,6 +282,12 @@ def plot_with_stochastic(data, start_date, end_date, k_column, d_column):
             overlaying='y',
             side='right',
             range=[0, 100]
+        ),
+        legend=dict(
+            yanchor="top",
+            y=1.5,
+            xanchor="left",
+            x=1
         )
     )
 
