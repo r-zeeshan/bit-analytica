@@ -80,7 +80,7 @@ def calculate_bollinger_bands(data, window=20, num_std=2):
     return pd.DataFrame({
         "Bollinger_SMA": sma,
         "Upper_Band" : upper_band,
-        "Lower_Bank" : lower_band, 
+        "Lower_Band" : lower_band, 
     })
 
 
@@ -116,7 +116,7 @@ def calculate_stochastic_oscillator(data, window=14):
         pandas.DataFrame: A DataFrame containing the '%K' and '%D' columns.
 
     """
-    low_min = data['low'].rolling(window=window).min()
+    low_min = data['Low'].rolling(window=window).min()
     high_max = data['High'].rolling(window=window).max()
     data['%K'] = 100 * ((data['Close']- low_min) / (high_max - low_min))
     data['%D'] = data['%K'].rolling(window=3).mean()
