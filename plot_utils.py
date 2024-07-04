@@ -1,6 +1,5 @@
 import plotly.graph_objects as go
 
-
 TEMPLATE = 'plotly_dark'
 
 def add_candlestick_trace(fig, data):
@@ -47,7 +46,7 @@ def plot_with_sma_or_ema(data, start_date, end_date, column):
         x=data.index,
         y=data[column],
         mode='lines',
-        name=column   
+        name=column
     ))
 
     fig.update_layout(
@@ -212,7 +211,10 @@ def plot_with_atr(data, start_date, end_date, column):
     """
     data = data.loc[start_date:end_date]
 
-    fig = go.Figure(go.Scatter(
+    fig = go.Figure()
+    add_candlestick_trace(fig, data)
+
+    fig.add_trace(go.Scatter(
         x=data.index,
         y=data[column],
         mode='lines',
