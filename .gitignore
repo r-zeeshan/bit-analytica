@@ -1,3 +1,2 @@
 __pycache__/
-news_data/
-demo.ipynb
+*.csv
