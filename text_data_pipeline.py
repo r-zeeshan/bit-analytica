@@ -1,5 +1,5 @@
 from transformers import BertTokenizer, BertForSequenceClassification
-from data_scrapper import fetch_past_24hrs
+from data_scrapper import fetch_24hrs
 from text_utils import clean_text, get_sentiment, aggregate_sentiment
 from config import IMPACT_WEIGHTS
 import nltk
@@ -38,7 +38,7 @@ class TextDataPipeline:
         Returns:
             pandas.DataFrame: A DataFrame containing the aggregated sentiment scores for the past 24 hours.
         """
-        data = fetch_past_24hrs() ## Step 1: Fetch the Data
+        data = fetch_24hrs() ## Step 1: Fetch the Data
         data['content'] = data['content'].apply(clean_text) ## Step 2: Clean the text (see method documentation for more details)
         data['sentiment'] = data['content'].apply(lambda x: get_sentiment(x, self.tokenizer, self.model)) ## Step 3: Get sentiment scores
         data = aggregate_sentiment(data, IMPACT_WEIGHTS) ## Step 4: Aggregate sentiment scores for the past 24hrs
