@@ -41,3 +41,20 @@ IMPACT_WEIGHTS = {
     'security_enhancements': 2,
     'social_media_trends': 1
 }
+
+
+### Saving the column Names
+SMA7 = 'SMA_7'
+SMA14 = 'SMA_14'
+EMA7 = 'EMA7'
+EMA14 = 'EMA14'
+RSI = 'RSI'
+MACD = 'MACD'
+SIGNAL_LINE = 'Signal Line'
+BOLLINGER_SMA = 'Bollinger_SMA'
+UPPER_BAND_BB = 'Upper_Band_BB'
+LOWER_BAND_BB = 'Lower_Band_BB'
+ATR = 'ATR'
+K = '%K'
+D = '%D'
+OBV = 'OBV'
