@@ -1,4 +1,25 @@
 import pandas as pd
+import yfinance as yf
+import datetime
+
+def get_data_from_yahoo(ticker, start=None, end=None):
+    """
+    Retrieves historical data for a given ticker from Yahoo Finance.
+
+    Args:
+        ticker (str): The ticker symbol of the stock or asset.
+        start (str): The start date of the data in the format 'YYYY-MM-DD'.
+        end (str): The end date of the data in the format 'YYYY-MM-DD'.
+
+    Returns:
+        pandas.DataFrame: A DataFrame containing the historical data.
+
+    """
+    end = datetime.datetime.now() if end is None else end
+    start = end - datetime.timedelta(days=1) if start is None else start
+
+    data = yf.download(ticker, start=start, end=end, interval='1d')
+    return data
 
 def calculate_sma(data, window):
     """
