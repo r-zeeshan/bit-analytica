@@ -158,15 +158,15 @@ def fetch_historical_data(start_date, file_index, base_dir, end_date=None):
     fetch_data(start_date=start_date, end_date=end_date, file_index=file_index, base_dir=base_dir, save=True)
 
 
-def fetch_past_24hrs():
+def fetch_24hrs(start=None, end=None):
     """
     Fetches data for the past 24 hours.
 
     Returns:
         The data fetched for the past 24 hours.
     """
-    end_date = datetime.now()
-    start_date = end_date - timedelta(days=1)
+    end_date = datetime.now() if end is None else end
+    start_date = end_date - timedelta(days=1) if start is None else start
 
     dataframe = fetch_data(start_date=start_date, end_date=end_date)
     dataframe = clean_dates(dataframe)
