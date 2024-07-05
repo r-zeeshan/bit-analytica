@@ -216,5 +216,5 @@ if __name__ == '__main__':
         end_date = '2017-01-15'
         fetch_historical_data(start_date=start_date, file_index=0, base_dir='test', end_date=end_date)
     else:
-        data = fetch_past_24hrs()
+        data = fetch_24hrs()
     
