@@ -2,7 +2,19 @@ from btc_utils import *
 from config import *
 
 class BitcoinDataPipeline:
+    """
+    A class that represents a Bitcoin data pipeline.
+
+    This class retrieves the latest Bitcoin data from Yahoo Finance and calculates various technical indicators.
+
+    Attributes:
+        btc (pandas.DataFrame): Bitcoin data with calculated technical indicators.
+    """
+
     def __init__(self):
+        """
+        Initializes a new instance of the BitcoinDataPipeline class.
+        """
         self.btc = None
 
 
