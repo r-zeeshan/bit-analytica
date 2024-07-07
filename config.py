@@ -26,6 +26,7 @@ QUERIES = {
 MODE = "ArtList"
 FORMAT = "json"
 
+### Defining the imapct weights for news categories
 IMPACT_WEIGHTS = {
     'regulatory_news': 13,
     'legal_actions': 12,
