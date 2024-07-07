@@ -4,7 +4,7 @@ import datetime
 
 def get_data_from_yahoo(start=None, end=None):
     """
-    Retrieves historical data for a given ticker from Yahoo Finance.
+    Retrieves historical data for a given ticker from Yahoo Finance. 
 
     Args:
         start (str): The start date of the data in the format 'YYYY-MM-DD'.
