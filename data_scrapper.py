@@ -160,13 +160,27 @@ def fetch_historical_data(start_date, file_index, base_dir, end_date=None):
 
 def fetch_24hrs(start=None, end=None):
     """
-    Fetches data for the past 24 hours.
+    Fetches data for the entire previous day by default or for a specific day if start is provided.
 
     Returns:
-        The data fetched for the past 24 hours.
+        The data fetched for the specified day.
     """
-    end_date = datetime.now() if end is None else end
-    start_date = end_date - timedelta(days=1) if start is None else start
+    if start is None and end is None:
+        now = datetime.now()
+        
+        # Set end_date to the end of the previous day
+        end_date = datetime(now.year, now.month, now.day) - timedelta(seconds=1)
+        
+        # Set start_date to the start of the previous day
+        start_date = end_date.replace(hour=0, minute=0, second=0, microsecond=0)
+    elif start is not None and end is None:
+        # If only start date is provided, set start_date and end_date for that specific day
+        start_date = datetime(start.year, start.month, start.day, 0, 0, 0)
+        end_date = start_date + timedelta(days=1) - timedelta(seconds=1)
+    else:
+        # If both start and end dates are provided, use them directly
+        start_date = start
+        end_date = end
 
     dataframe = fetch_data(start_date=start_date, end_date=end_date)
     dataframe = clean_dates(dataframe)
