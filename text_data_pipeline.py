@@ -3,6 +3,8 @@ from data_scrapper import fetch_24hrs
 from text_utils import clean_text, get_sentiment, aggregate_sentiment
 from config import IMPACT_WEIGHTS
 import nltk
+import pandas as pd
+from datetime import datetime, timedelta
 
 
 class TextDataPipeline:
@@ -43,8 +45,40 @@ class TextDataPipeline:
         data['sentiment'] = data['content'].apply(lambda x: get_sentiment(x, self.tokenizer, self.model)) ## Step 3: Get sentiment scores
         data = aggregate_sentiment(data, IMPACT_WEIGHTS) ## Step 4: Aggregate sentiment scores for the past 24hrs
         return data
+    
 
-    def get_label_definitions(self):
+    def updateSentimentScores(self, csv_path='data/sentiment_scores.csv'):
+        """
+        Reads the CSV, fetches and processes new data, and appends it to the CSV.
+
+        Args:
+            csv_path (str): The path to the CSV file. Defaults to 'sentiment_scores.csv'.
+        """
+        ### Step 1: Read the CSV and get the last Date
+        df = pd.read_csv(csv_path, parse_dates=['Dates'], index_col='Date')
+        latest_date = df.index.max()
+
+        ### Step 2: Calculate the start and end date for fetching new data
+        start_date = latest_date + timedelta(days=1)
+        end_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(seconds=1)
+
+        ### Step 3: Fetch and preprocess data from start_date to end_date
+        while start_date <= end_date:
+            day_end = start_date + timedelta(days=1) - timedelta(seconds=1)
+            data = fetch_24hrs(start=start_date, end=day_end)
+            data['content'] = data['content'].apply(clean_text)
+            data['sentiment'] = data['content'].apply(lambda x: get_sentiment(x, self.tokenizer, self.model))
+            daily_data_aggregated = aggregate_sentiment(data, IMPACT_WEIGHTS)
+
+            df = df.append(daily_data_aggregated, ignore_index=False)
+
+            start_date = start_date + timedelta(days=1)
+
+
+        ### Step 4: Saving the updated data
+        df.to_csv(csv_path)
+
+    def getLabelDefinitions(self):
         """
         Returns the label definitions for sentiment scores.
 
