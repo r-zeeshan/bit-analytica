@@ -333,3 +333,75 @@ def plot_with_obv(data, start_date, end_date, column):
     )
 
     return fig
+
+
+def plot_all_indicators(data, start_date, end_date):
+    """
+    Plots a candlestick chart with all indicators toggled off initially.
+
+    Args:
+        data (pandas.DataFrame): The data containing the candlestick and indicators data.
+        start_date (str): The start date for the data to be plotted.
+        end_date (str): The end date for the data to be plotted.
+
+    Returns:
+        plotly.graph_objects.Figure: The figure object representing the candlestick chart with all indicators.
+    """
+    data = data.loc[start_date:end_date]
+
+    fig = go.Figure()
+    add_candlestick_trace(fig, data)
+
+    from config import SMA7, SMA14, EMA7, EMA14, RSI, MACD, SIGNAL_LINE, BOLLINGER_SMA
+    from config import UPPER_BAND_BB, LOWER_BAND_BB, ATR, K, D, OBV
+
+    indicators = {
+        'sma_ema': [SMA7, SMA14, EMA7, EMA14],
+        'rsi': RSI,
+        'macd': [MACD, SIGNAL_LINE],
+        'bollinger_bands': [BOLLINGER_SMA, UPPER_BAND_BB, LOWER_BAND_BB],
+        'atr': ATR,
+        'stochastic': [K, D],
+        'obv': OBV
+    }
+
+    for indicator, columns in indicators.items():
+        if isinstance(columns, list):
+            for column in columns:
+                fig.add_trace(go.Scatter(
+                    x=data.index,
+                    y=data[column],
+                    mode='lines',
+                    name=column,
+                    visible='legendonly'
+                ))
+        else:
+            fig.add_trace(go.Scatter(
+                x=data.index,
+                y=data[columns],
+                mode='lines',
+                name=columns,
+                visible='legendonly',
+                yaxis='y2' if indicator in ['rsi', 'atr', 'stochastic', 'obv'] else 'y'
+            ))
+
+    fig.update_layout(
+        title='Bitcoin Candlestick Chart with Indicators',
+        yaxis_title='Price (USD)',
+        xaxis_title='Date',
+        template=TEMPLATE,
+        height=550,
+        yaxis2=dict(
+            overlaying='y',
+            side='right',
+            range=[0, 100]
+        ),
+        legend=dict(
+            yanchor="top",
+            y=1.1,
+            xanchor="left",
+            x=1.1
+        )
+    )
+
+    return fig
