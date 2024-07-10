@@ -63,6 +63,7 @@ class TextDataPipeline:
         end_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(seconds=1)
 
         ### Step 3: Fetch and preprocess data from start_date to end_date
+        new_data = []
         while start_date <= end_date:
             day_end = start_date + timedelta(days=1) - timedelta(seconds=1)
             data = fetch_24hrs(start=start_date, end=day_end)
@@ -70,12 +71,15 @@ class TextDataPipeline:
             data['sentiment'] = data['content'].apply(lambda x: get_sentiment(x, self.tokenizer, self.model))
             daily_data_aggregated = aggregate_sentiment(data, IMPACT_WEIGHTS)
 
-            df = df.append(daily_data_aggregated, ignore_index=False)
-
+            new_data.append[daily_data_aggregated]
             start_date = start_date + timedelta(days=1)
 
+        ### Step 4: Concatenating the new data with existing dataframe
+        if new_data:
+            new_data_df = pd.concat(new_data)
+            df = pd.concat([df, new_data_df])
 
-        ### Step 4: Saving the updated data
+        ### Step 5: Saving the updated data
         df.to_csv(csv_path)
 
     def getLabelDefinitions(self):
