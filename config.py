@@ -47,8 +47,8 @@ IMPACT_WEIGHTS = {
 ### Saving the column Names
 SMA7 = 'SMA_7'
 SMA14 = 'SMA_14'
-EMA7 = 'EMA7'
-EMA14 = 'EMA14'
+EMA7 = 'EMA_7'
+EMA14 = 'EMA_14'
 RSI = 'RSI'
 MACD = 'MACD'
 SIGNAL_LINE = 'Signal Line'
