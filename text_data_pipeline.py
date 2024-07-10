@@ -71,7 +71,7 @@ class TextDataPipeline:
             data['sentiment'] = data['content'].apply(lambda x: get_sentiment(x, self.tokenizer, self.model))
             daily_data_aggregated = aggregate_sentiment(data, IMPACT_WEIGHTS)
 
-            new_data.append[daily_data_aggregated]
+            new_data.append(daily_data_aggregated)
             start_date = start_date + timedelta(days=1)
 
         ### Step 4: Concatenating the new data with existing dataframe
