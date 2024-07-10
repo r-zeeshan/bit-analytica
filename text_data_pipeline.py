@@ -52,10 +52,10 @@ class TextDataPipeline:
         Reads the CSV, fetches and processes new data, and appends it to the CSV.
 
         Args:
-            csv_path (str): The path to the CSV file. Defaults to 'sentiment_scores.csv'.
+            csv_path (str): The path to the CSV file. Defaults to 'data/sentiment_scores.csv'.
         """
         ### Step 1: Read the CSV and get the last Date
-        df = pd.read_csv(csv_path, parse_dates=['Dates'], index_col='Date')
+        df = pd.read_csv(csv_path, parse_dates=['Date'], index_col='Date')
         latest_date = df.index.max()
 
         ### Step 2: Calculate the start and end date for fetching new data
