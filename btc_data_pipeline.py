@@ -42,7 +42,7 @@ class BitcoinDataPipeline:
         return self.btc
     
 
-    def getHourlyData():
+    def getHourlyData(self):
         """
         Retrieves hourly data for the past 14 days and calculates various technical indicators.
 
@@ -50,8 +50,8 @@ class BitcoinDataPipeline:
             pandas.DataFrame: A DataFrame containing the hourly data and calculated indicators.
         """
         end = datetime.now()
-        start = end - timedelta(days=14)
-        data = get_data_from_yahoo(start=start, end=end, ticker='1h')
+        start = end - timedelta(days=7)
+        data = get_data_from_yahoo(start=start.strftime('%Y-%m-%d'), end=end.strftime('%Y-%m-%d'), interval='1h')
         data[SMA7] = calculate_sma(data, 7) ### Calculating SMA for 7 Hours
         data[SMA14] = calculate_sma(data, 14) ### Calculating SMA for 14 Hours
         data[EMA7] = calculate_ema(data, 7) ### Calculating EMA for 7 Hours
