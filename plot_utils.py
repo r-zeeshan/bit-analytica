@@ -352,16 +352,12 @@ def plot_all_indicators(data, start_date, end_date):
     fig = go.Figure()
     add_candlestick_trace(fig, data)
 
-    from config import SMA7, SMA14, EMA7, EMA14, RSI, MACD, SIGNAL_LINE, BOLLINGER_SMA
-    from config import UPPER_BAND_BB, LOWER_BAND_BB, ATR, K, D, OBV
+    from config import SMA7, SMA14, EMA7, EMA14, BOLLINGER_SMA
+    from config import UPPER_BAND_BB, LOWER_BAND_BB, OBV
 
     indicators = {
         'sma_ema': [SMA7, SMA14, EMA7, EMA14],
-        'rsi': RSI,
-        'macd': [MACD, SIGNAL_LINE],
         'bollinger_bands': [BOLLINGER_SMA, UPPER_BAND_BB, LOWER_BAND_BB],
-        'atr': ATR,
-        'stochastic': [K, D],
         'obv': OBV
     }
 
