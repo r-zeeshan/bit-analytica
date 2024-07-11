@@ -1,4 +1,14 @@
 def load_models():
+    """
+    Load the pre-trained models and scalers used for prediction.
+
+    Returns:
+        x_scaler (object): The scaler used for scaling the input features.
+        y_high_scaler (object): The scaler used for scaling the high prediction target.
+        y_low_scaler (object): The scaler used for scaling the low prediction target.
+        high_model (object): The pre-trained model for high prediction.
+        low_model (object): The pre-trained model for low prediction.
+    """
     from tensorflow.keras.models import load_model
     from pytorch_tabnet.tab_model import TabNetRegressor
     import pickle
@@ -20,6 +30,19 @@ def load_models():
 
 
 def getData(textDataPipeline, bitcoinDataPipeline, scaler):
+    """
+    Retrieves the latest Bitcoin data and sentiment score, combines them into a DataFrame,
+    and applies scaling to the data.
+
+    Parameters:
+    - textDataPipeline: An object representing the text data pipeline.
+    - bitcoinDataPipeline: An object representing the Bitcoin data pipeline.
+    - scaler: An object used for scaling the data.
+
+    Returns:
+    - Transformed data: A DataFrame containing the transformed data.
+
+    """
     sentiment_score = textDataPipeline.getSentimentScoreForPast24Hours()
     bitcoin_data = bitcoinDataPipeline.getLatestBitcoinData()
 
@@ -32,14 +55,20 @@ def getData(textDataPipeline, bitcoinDataPipeline, scaler):
 
 
 def predict_price(model, data, scaler, flag=False):
+    """
+    Predicts the price using the given model, data, and scaler.
+
+    Parameters:
+    - model: The trained model used for prediction.
+    - data: The input data for prediction.
+    - scaler: The scaler used to scale the data.
+    - flag: A boolean flag indicating whether the data needs to be reshaped.
+
+    Returns:
+    - The predicted price as a single value.
+    """
     if flag:
         data = data.reshape((data.shape[0], 1, data.shape[1]))
     pred = model.predict(data)
     pred = scaler.inverse_transform(pred)
     return pred.flatten()[0]
-
-
-# data = getData(textDataPipeline, bitcoinDataPipeline, x_scaler)
-
-# print(f"High: {predict_price(high_model, data, y_high_scaler, flag=True)}")
-# print(f"Low: {predict_price(low_model, data, y_high_scaler, flag=False)}")
