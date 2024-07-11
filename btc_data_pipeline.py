@@ -50,7 +50,7 @@ class BitcoinDataPipeline:
             pandas.DataFrame: A DataFrame containing the hourly data and calculated indicators.
         """
         end = datetime.now()
-        start = end - timedelta(days=7)
+        start = end - timedelta(days=30)
         data = get_data_from_yahoo(start=start.strftime('%Y-%m-%d'), end=end.strftime('%Y-%m-%d'), interval='1h')
         data[SMA7] = calculate_sma(data, 7) ### Calculating SMA for 7 Hours
         data[SMA14] = calculate_sma(data, 14) ### Calculating SMA for 14 Hours
