@@ -2,23 +2,25 @@ import pandas as pd
 import yfinance as yf
 import datetime
 
-def get_data_from_yahoo(start=None, end=None):
+def get_data_from_yahoo(start=None, end=None, interval='1d'):
     """
-    Retrieves historical data for a given ticker from Yahoo Finance. 
+    Retrieves historical Bitcoin price data from Yahoo Finance.
 
     Args:
-        start (str): The start date of the data in the format 'YYYY-MM-DD'.
-        end (str): The end date of the data in the format 'YYYY-MM-DD'.
+        start (datetime): The start date of the data range (default: None).
+        end (datetime): The end date of the data range (default: None).
+        interval (str): The time interval for the data (default: '1d').
 
     Returns:
-        pandas.DataFrame: A DataFrame containing the historical data.
+        pandas.DataFrame: The historical Bitcoin price data.
 
     """
     end = datetime.datetime.now() if end is None else end
     start = end - datetime.timedelta(days=1) if start is None else start
 
-    data = yf.download('BTC-USD', start=start, end=end, interval='1d')
+    data = yf.download('BTC-USD', start=start, end=end, interval=interval)
     return data
+
 
 def calculate_sma(data, window):
     """
