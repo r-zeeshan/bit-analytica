@@ -381,27 +381,20 @@ def plot_all_indicators(data, start_date, end_date):
                 y=data[columns],
                 mode='lines',
                 name=columns,
-                visible='legendonly',
-                yaxis='y2' if indicator in ['rsi', 'atr', 'stochastic', 'obv'] else 'y'
+                visible='legendonly'
             ))
 
     fig.update_layout(
         title='Bitcoin Candlestick Chart with Indicators',
+        xaxis_title='Date',
+        template='plotly_dark',
+        height=550,
         yaxis=dict(
-            title='Indicators',
-            side='left'
-        ),
-        yaxis2=dict(
             title='Price (USD)',
             overlaying='y',
             side='right',
-            showgrid=False
+            showgrid=True  
         ),
-        xaxis=dict(
-            title='Date'
-        ),
-        template='plotly_dark',  # Adjust the template as needed
-        height=550,
         legend=dict(
             yanchor="top",
             y=1.1,
@@ -411,3 +404,5 @@ def plot_all_indicators(data, start_date, end_date):
     )
 
     return fig
+
+
