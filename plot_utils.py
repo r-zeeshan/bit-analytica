@@ -387,15 +387,21 @@ def plot_all_indicators(data, start_date, end_date):
 
     fig.update_layout(
         title='Bitcoin Candlestick Chart with Indicators',
-        yaxis_title='Price (USD)',
-        xaxis_title='Date',
-        template=TEMPLATE,
-        height=550,
+        yaxis=dict(
+            title='Indicators',
+            side='left'
+        ),
         yaxis2=dict(
+            title='Price (USD)',
             overlaying='y',
             side='right',
-            range=[0, 100]
+            showgrid=False
         ),
+        xaxis=dict(
+            title='Date'
+        ),
+        template='plotly_dark',  # Adjust the template as needed
+        height=550,
         legend=dict(
             yanchor="top",
             y=1.1,
