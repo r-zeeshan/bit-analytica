@@ -218,15 +218,16 @@ st.markdown(
     h1, h2, h3 {
         text-align: center;
     }
-    footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
+    .footer {
         width: 100%;
         background-color: #f0f0f0;
         color: black;
         text-align: center;
         padding: 10px 0;
+        position: relative;
+        bottom: 0;
+        left: 0;
+        margin-top: 3rem;  /* Add some space above the footer */
     }
     </style>
     """,
@@ -236,10 +237,10 @@ st.markdown(
 # Footer
 st.markdown(
     """
-    <footer>
+    <div class="footer">
         <p><strong>Disclaimer:</strong> The information provided on this website is for informational purposes only and is not intended as financial advice. Always do your own research before making any investment decisions.</p>
         <p>Developed By Zeeshan Hameed</p>
-    </footer>
+    </div>
     """,
     unsafe_allow_html=True
 )
