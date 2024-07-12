@@ -63,7 +63,7 @@ st.set_page_config(layout="wide", page_title="BitAnalytica")
 # Title
 st.markdown(
     """
-    <div style="text-align: center;">
+    <div style="text-align: center; padding-top: 100px;">
         <h1>BitAnalytica</h1>
     </div>
     """,
