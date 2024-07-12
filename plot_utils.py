@@ -24,18 +24,19 @@ def add_candlestick_trace(fig, data):
 
 
 
-def plot_with_sma_or_ema(data, start_date, end_date, column):
+def plot_with_sma(data, start_date, end_date, sma7, sma14):
     """
-    Plots a candlestick chart with a line plot of a specific column (SMA or EMA) for a given date range.
+    Plots a candlestick chart with SMA7 and SMA14 lines.
 
     Args:
-        data (pandas.DataFrame): The data containing the candlestick and line plot data.
+        data (pandas.DataFrame): The data containing the candlestick and SMA lines.
         start_date (str): The start date of the date range.
         end_date (str): The end date of the date range.
-        column (str): The column name to plot as a line plot.
+        sma7 (str): The column name for SMA7.
+        sma14 (str): The column name for SMA14.
 
     Returns:
-        go.Figure: The plotly figure object containing the candlestick chart and line plot.
+        go.Figure: The plotly figure object containing the candlestick chart and SMA lines.
     """
     data = data.loc[start_date:end_date]
 
@@ -44,19 +45,70 @@ def plot_with_sma_or_ema(data, start_date, end_date, column):
 
     fig.add_trace(go.Scatter(
         x=data.index,
-        y=data[column],
+        y=data[sma7],
         mode='lines',
-        name=column
+        name=sma7
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=data.index,
+        y=data[sma14],
+        mode='lines',
+        name=sma14
     ))
 
     fig.update_layout(
-        title=f"Bitcoin Candlestick with {column}",
+        title=f"Bitcoin Candlestick with {sma7} and {sma14}",
         yaxis_title='Price (USD)',
         xaxis_title='Date',
         template=TEMPLATE
     )
 
     return fig
+
+
+def plot_with_ema(data, start_date, end_date, ema7, ema14):
+    """
+    Plots a candlestick chart with EMA7 and EMA14 lines.
+
+    Args:
+        data (pandas.DataFrame): The data containing the candlestick and EMA lines.
+        start_date (str): The start date of the date range.
+        end_date (str): The end date of the date range.
+        ema7 (str): The column name for EMA7.
+        ema14 (str): The column name for EMA14.
+
+    Returns:
+        go.Figure: The plotly figure object containing the candlestick chart and EMA lines.
+    """
+    data = data.loc[start_date:end_date]
+
+    fig = go.Figure()
+    add_candlestick_trace(fig, data)
+
+    fig.add_trace(go.Scatter(
+        x=data.index,
+        y=data[ema7],
+        mode='lines',
+        name=ema7
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=data.index,
+        y=data[ema14],
+        mode='lines',
+        name=ema14
+    ))
+
+    fig.update_layout(
+        title=f"Bitcoin Candlestick with {ema7} and {ema14}",
+        yaxis_title='Price (USD)',
+        xaxis_title='Date',
+        template=TEMPLATE
+    )
+
+    return fig
+
 
 
 def plot_with_rsi(data, start_date, end_date, column):
