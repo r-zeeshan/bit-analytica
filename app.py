@@ -86,8 +86,8 @@ col1, col2 = st.columns([8, 2])
 with col1:
     st.markdown(
         """
-        <div style="text-align: center;">
-            <h2>Bitcoin Hourly Data with Technical Indicators</h2>
+        <div style="text-align: center; justify-content: center">
+            <h3>Bitcoin Hourly Data with Technical Indicators</h3>
         </div>
         """,
         unsafe_allow_html=True
@@ -201,11 +201,14 @@ if (current_time - st.session_state.last_refresh_time).seconds > 3600:
     st.session_state.last_refresh_time = current_time
     st.rerun()
 
+
+# Streamlit layout settings
 st.markdown(
     """
     <style>
     .main .block-container {
         padding-top: 1rem;
+        padding-bottom: 3rem;  /* Add some space for the footer */
     }
     .stApp {
         display: flex;
@@ -215,7 +218,28 @@ st.markdown(
     h1, h2, h3 {
         text-align: center;
     }
+    footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #f0f0f0;
+        color: black;
+        text-align: center;
+        padding: 10px 0;
+    }
     </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Footer
+st.markdown(
+    """
+    <footer>
+        <p><strong>Disclaimer:</strong> The information provided on this website is for informational purposes only and is not intended as financial advice. Always do your own research before making any investment decisions.</p>
+        <p>Developed By Zeeshan Hameed</p>
+    </footer>
     """,
     unsafe_allow_html=True
 )
