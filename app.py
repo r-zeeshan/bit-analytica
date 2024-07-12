@@ -86,7 +86,7 @@ col1, col2 = st.columns([8, 2])
 with col1:
     st.markdown(
         """
-        <div style="text-align: center; justify-content: center; padding-left: 100px">
+        <div style="text-align: center; justify-content: center; padding-left: 300px">
             <h3>Bitcoin Hourly Data with Technical Indicators</h3>
         </div>
         """,
