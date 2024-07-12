@@ -75,7 +75,7 @@ To run the project locally, follow these steps:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/bit-analytica.git
+    git clone https://github.com/r-zeeshan/bit-analytica.git
     cd bit-analytica
     ```
 
