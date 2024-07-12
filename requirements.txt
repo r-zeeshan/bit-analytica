@@ -9,3 +9,4 @@ torch
 nltk
 tensorflow
 plotly
+pytorch-tabnet
