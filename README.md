@@ -18,8 +18,12 @@ The text data preprocessing involves the following steps:
 ### Bitcoin Data Preprocessing
 
 The Bitcoin data preprocessing includes:
-1. **Data Retrieval**: Historical Bitcoin price data is retrieved from Yahoo Finance.
+1. **Data Retrieval**: Historical Bitcoin price data is retrieved from Yahoo Finance using the `yfinance` library. The data starts from 2017 as it is the earliest year for which comprehensive news data is available.
 2. **Technical Indicator Calculation**: Various technical indicators such as SMA, EMA, RSI, MACD, Bollinger Bands, ATR, Stochastic Oscillator, and OBV are calculated and added to the dataset.
+
+### News Data Retrieval
+
+The GDELT (Global Data on Events, Location, and Tone) public API was used to scrape news data related to Bitcoin. The GDELT API provides a rich set of data on global events, and we used it to gather Bitcoin-related news articles starting from 2017. This data was then used for sentiment analysis and aggregated to create a sentiment score for each day.
 
 ### Model Development and Evaluation
 
@@ -36,17 +40,15 @@ Several machine learning models were developed and evaluated to predict Bitcoin 
 | High_R2     | 0.989947    | 0.992238    | 0.993660    | 0.976936    |
 | Low_R2      | 0.969617    | 0.990465    | 0.990840    | 0.996536    |
 
-![Model Metrics](https://bit-analytica.streamlit.app/image1.png)
-
 ### Model Rankings by Metric
 
 The models were ranked based on various metrics as shown in the following bar chart:
 
-![Model Rankings by Metric](https://bit-analytica.streamlit.app/image2.png)
+![Model Rankings by Metric](data/plot.png)
 
 ## Application Layout
 
-The application is divided into two main sections:
+The application is divided into three main sections:
 
 ### Bitcoin Hourly Data with Technical Indicators
 
@@ -87,9 +89,32 @@ To run the project locally, follow these steps:
     streamlit run app.py
     ```
 
+## APIs Used
+
+### GDELT API
+
+The GDELT API was used to scrape news data related to Bitcoin. The API provides a comprehensive set of data on global events, which we filtered to get news articles related to Bitcoin. The data includes the title, publish date, URL, and full content of the articles.
+
+### Yahoo Finance API
+
+The Yahoo Finance API, accessed via the `yfinance` Python library, was used to retrieve historical Bitcoin price data. This data includes open, high, low, close prices, and volume information for each day. 
+
+## Data Limitations
+
+The data starts from 2017 because it is the earliest year for which comprehensive news data was available from the GDELT API. This limitation was due to the availability of historical news data.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
 ## Disclaimer
 
 The information provided on this website is for informational purposes only and is not intended as financial advice. Always do your own research before making any investment decisions.
 
 **Developed By Zeeshan Hameed**
 
+## Acknowledgments
+
+- **GDELT Project** for providing access to their comprehensive news data API.
+- **Yahoo Finance** for the financial data API.
+- **Hugging Face** for the `finbert-tone` model used in sentiment analysis.
