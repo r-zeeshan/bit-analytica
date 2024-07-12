@@ -86,7 +86,7 @@ col1, col2 = st.columns([8, 2])
 with col1:
     st.markdown(
         """
-        <div style="text-align: center; justify-content: center">
+        <div style="text-align: center; justify-content: center; padding-left: 100px">
             <h3>Bitcoin Hourly Data with Technical Indicators</h3>
         </div>
         """,
@@ -202,6 +202,7 @@ if (current_time - st.session_state.last_refresh_time).seconds > 3600:
     st.rerun()
 
 
+
 # Streamlit layout settings
 st.markdown(
     """
@@ -220,8 +221,8 @@ st.markdown(
     }
     .footer {
         width: 100%;
-        background-color: #f0f0f0;
-        color: black;
+        background-color: #333;
+        color: #f0f0f0;
         text-align: center;
         padding: 10px 0;
         position: relative;
