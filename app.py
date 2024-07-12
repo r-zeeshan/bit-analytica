@@ -60,8 +60,15 @@ timezone = pytz.timezone("America/New_York")
 # Set Streamlit page configuration
 st.set_page_config(layout="wide", page_title="BitAnalytica")
 
-# Title of the application
-st.title("BitAnalytica")
+# Title
+st.markdown(
+    """
+    <div style="text-align: center;">
+        <h1>BitAnalytica</h1>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # Initialize pipelines and models
 textDataPipeline, bitcoinDataPipeline, x_scaler, y_high_scaler, y_low_scaler, high_model, low_model = initialize_pipelines_and_models()
@@ -135,11 +142,18 @@ with col2:
 current_time = datetime.now(timezone)
 
 # Initial plotting of daily charts
-start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+start_date = (datetime.now() - timedelta(days=45)).strftime('%Y-%m-%d')
 end_date = datetime.now().strftime('%Y-%m-%d')
 daily_plots = plot_daily_data(bitcoinDataPipeline, start_date, end_date)
 
-st.subheader("Bitcoin Technical Analysis")
+st.markdown(
+    """
+    <div style="text-align: center;">
+        <h2>Bitcoin Technical Analysis Daily Chart (Last 45 Days)</h2>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 for i in range(0, len(daily_plots), 2):
     cols = st.columns(2)
     for col, plot in zip(cols, daily_plots[i:i+2]):
@@ -180,7 +194,6 @@ if (current_time - st.session_state.last_refresh_time).seconds > 3600:
     st.session_state.last_refresh_time = current_time
     st.rerun()
 
-# Streamlit layout settings
 st.markdown(
     """
     <style>
@@ -191,6 +204,9 @@ st.markdown(
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
+    }
+    h1, h2, h3 {
+        text-align: center;
     }
     </style>
     """,
