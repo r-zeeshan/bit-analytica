@@ -5,7 +5,7 @@ from text_data_pipeline import TextDataPipeline
 from btc_data_pipeline import BitcoinDataPipeline
 from config import LLM
 from app_utils import load_models, getData, predict_price
-from plot_utils import plot_all_indicators, plot_with_sma_or_ema, plot_with_rsi
+from plot_utils import plot_all_indicators, plot_with_sma_or_ema, plot_with_rsi, plot_with_macd, plot_with_bollinger_bands, plot_with_atr, plot_with_stochastic, plot_with_obv
 
 @st.cache_resource
 def initialize_pipelines_and_models():
@@ -21,7 +21,7 @@ def initialize_pipelines_and_models():
 
 def plot_hourly_data(bitcoinDataPipeline):
     hourly_data = bitcoinDataPipeline.getHourlyData()
-    start_date = (datetime.now() - timedelta(days=14)).strftime('%Y-%m-%d')
+    start_date = (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')
     end_date = datetime.now().strftime('%Y-%m-%d')
     fig = plot_all_indicators(hourly_data, start_date, end_date)
     return fig
@@ -38,6 +38,20 @@ def update_predictions(textDataPipeline, bitcoinDataPipeline, x_scaler, high_mod
         low_pred = predict_price(low_model, data, y_low_scaler, flag=False)
     
     return high_pred, low_pred
+
+
+def plot_daily_data(bitcoinDataPipeline, start_date, end_date):
+    daily_data = bitcoinDataPipeline.getLatestBitcoinData()
+    plots = []
+    plots.append(plot_with_sma_or_ema(daily_data, start_date, end_date, 'SMA_7'))
+    plots.append(plot_with_sma_or_ema(daily_data, start_date, end_date, 'EMA_14'))
+    plots.append(plot_with_rsi(daily_data, start_date, end_date, 'RSI'))
+    plots.append(plot_with_macd(daily_data, start_date, end_date, 'MACD', 'Signal Line'))
+    plots.append(plot_with_bollinger_bands(daily_data, start_date, end_date, 'Bollinger_SMA', 'Upper_Band_BB', 'Lower_Band_BB'))
+    plots.append(plot_with_atr(daily_data, start_date, end_date, 'ATR'))
+    plots.append(plot_with_stochastic(daily_data, start_date, end_date, '%K', '%D'))
+    plots.append(plot_with_obv(daily_data, start_date, end_date, 'OBV'))
+    return plots
 
 
 # Define timezone
@@ -117,10 +131,22 @@ with col2:
             </div>
         """, unsafe_allow_html=True)
 
+
 # Get the current time
 current_time = datetime.now(timezone)
 
-# Check if it's time to update the predictions (every 24 hours at 7 AM UTC-4)
+# Initial plotting of daily charts
+start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+end_date = datetime.now().strftime('%Y-%m-%d')
+daily_plots = plot_daily_data(bitcoinDataPipeline, start_date, end_date)
+
+st.subheader("Bitcoin Technical Analysis")
+for i in range(0, len(daily_plots), 3):
+    cols = st.columns(3)
+    for col, plot in zip(cols, daily_plots[i:i+3]):
+        col.plotly_chart(plot, use_container_width=True)
+
+# Check if it's time to update the predictions and plots (every 24 hours at 7 AM UTC-4)
 if current_time.hour == 7 and current_time.minute == 0:
     high_pred, low_pred = update_predictions(
         textDataPipeline, bitcoinDataPipeline, x_scaler, high_model, y_high_scaler, low_model, y_low_scaler
@@ -139,13 +165,22 @@ if current_time.hour == 7 and current_time.minute == 0:
         </div>
     """, unsafe_allow_html=True)
 
-# Auto-refresh the chart every hour
+    # Update the daily charts
+    daily_plots = plot_daily_data(bitcoinDataPipeline, start_date, end_date)
+    
+    # Plot each technical indicator chart in a grid layout
+    for i in range(0, len(daily_plots), 3):
+        cols = st.columns(3)
+        for col, plot in zip(cols, daily_plots[i:i+3]):
+            col.plotly_chart(plot, use_container_width=True)
+
 if 'last_refresh_time' not in st.session_state:
     st.session_state.last_refresh_time = current_time
 
 if (current_time - st.session_state.last_refresh_time).seconds > 3600:
     st.session_state.last_refresh_time = current_time
     st.rerun()
+
 
 # Streamlit layout settings
 st.markdown(
@@ -164,23 +199,3 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Plot three additional charts below the main columns
-st.markdown("---")
-
-chart_col1, chart_col2, chart_col3 = st.columns(3)
-start_date = datetime.now().strftime('%Y-%m-%d')
-end_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
-with chart_col1:
-    st.subheader("SMA7")
-    sma7_fig = plot_with_sma_or_ema(bitcoinDataPipeline.getHourlyData(), start_date, end_date, 'SMA_7')
-    st.plotly_chart(sma7_fig, use_container_width=True)
-
-with chart_col2:
-    st.subheader("EMA7")
-    ema7_fig = plot_with_sma_or_ema(bitcoinDataPipeline.getHourlyData(), start_date, end_date, 'EMA_7')
-    st.plotly_chart(ema7_fig, use_container_width=True)
-
-with chart_col3:
-    st.subheader("RSI")
-    rsi_fig = plot_with_rsi(bitcoinDataPipeline.getHourlyData(), start_date, end_date, 'RSI')
-    st.plotly_chart(rsi_fig, use_container_width=True)
