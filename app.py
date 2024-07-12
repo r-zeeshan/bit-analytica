@@ -9,17 +9,36 @@ from plot_utils import plot_all_indicators, plot_with_sma, plot_with_ema, plot_w
 
 @st.cache_resource
 def initialize_pipelines_and_models():
-    # Initialize pipelines
+    """
+    Initializes the pipelines and models required for text and Bitcoin data processing.
+
+    Returns:
+        textDataPipeline (TextDataPipeline): The pipeline for text data processing.
+        bitcoinDataPipeline (BitcoinDataPipeline): The pipeline for Bitcoin data processing.
+        x_scaler (Scaler): The scaler for input data.
+        y_high_scaler (Scaler): The scaler for high target data.
+        y_low_scaler (Scaler): The scaler for low target data.
+        high_model (Model): The model for predicting high values.
+        low_model (Model): The model for predicting low values.
+    """
     textDataPipeline = TextDataPipeline(LLM)
     bitcoinDataPipeline = BitcoinDataPipeline()
 
-    # Load models and scalers
     x_scaler, y_high_scaler, y_low_scaler, high_model, low_model = load_models()
     
     return textDataPipeline, bitcoinDataPipeline, x_scaler, y_high_scaler, y_low_scaler, high_model, low_model
 
 
 def plot_hourly_data(bitcoinDataPipeline):
+    """
+    Plots the hourly data for Bitcoin.
+
+    Args:
+        bitcoinDataPipeline: An instance of the BitcoinDataPipeline class.
+
+    Returns:
+        fig: The matplotlib figure object containing the plotted data.
+    """
     hourly_data = bitcoinDataPipeline.getHourlyData()
     start_date = (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')
     end_date = datetime.now().strftime('%Y-%m-%d')
@@ -28,6 +47,22 @@ def plot_hourly_data(bitcoinDataPipeline):
 
 
 def update_predictions(textDataPipeline, bitcoinDataPipeline, x_scaler, high_model, y_high_scaler, low_model, y_low_scaler):
+    """
+    Updates the predictions for the high and low prices of Bitcoin based on the given data.
+
+    Parameters:
+    - textDataPipeline: The pipeline for processing text data.
+    - bitcoinDataPipeline: The pipeline for processing Bitcoin data.
+    - x_scaler: The scaler for scaling the input data.
+    - high_model: The model for predicting the high price.
+    - y_high_scaler: The scaler for scaling the high price predictions.
+    - low_model: The model for predicting the low price.
+    - y_low_scaler: The scaler for scaling the low price predictions.
+
+    Returns:
+    - high_pred: The predicted high price of Bitcoin.
+    - low_pred: The predicted low price of Bitcoin.
+    """
     with st.spinner("Getting sentiment score..."):
         data = getData(textDataPipeline, bitcoinDataPipeline, x_scaler)
     
@@ -41,26 +76,36 @@ def update_predictions(textDataPipeline, bitcoinDataPipeline, x_scaler, high_mod
 
 
 def plot_daily_data(bitcoinDataPipeline, start_date, end_date):
+    """
+    Plots various technical indicators based on daily Bitcoin data.
+
+    Args:
+        bitcoinDataPipeline (object): An object representing the Bitcoin data pipeline.
+        start_date (str): The start date for the data range.
+        end_date (str): The end date for the data range.
+
+    Returns:
+        list: A list of plots for each technical indicator.
+
+    """
+    from config import SMA7, SMA14, EMA7, EMA14, RSI, MACD, SIGNAL_LINE ,BOLLINGER_SMA
+    from config import UPPER_BAND_BB, LOWER_BAND_BB, ATR, K, D, OBV
     daily_data = bitcoinDataPipeline.getLatestBitcoinData()
     plots = []
-    plots.append(plot_with_sma(daily_data, start_date, end_date, 'SMA_7', 'SMA_14'))
-    plots.append(plot_with_ema(daily_data, start_date, end_date, 'EMA_7', 'EMA_14'))
-    plots.append(plot_with_rsi(daily_data, start_date, end_date, 'RSI'))
-    plots.append(plot_with_macd(daily_data, start_date, end_date, 'MACD', 'Signal Line'))
-    plots.append(plot_with_bollinger_bands(daily_data, start_date, end_date, 'Bollinger_SMA', 'Upper_Band_BB', 'Lower_Band_BB'))
-    plots.append(plot_with_atr(daily_data, start_date, end_date, 'ATR'))
-    plots.append(plot_with_stochastic(daily_data, start_date, end_date, '%K', '%D'))
-    plots.append(plot_with_obv(daily_data, start_date, end_date, 'OBV'))
+    plots.append(plot_with_sma(daily_data, start_date, end_date, SMA7, SMA14))
+    plots.append(plot_with_ema(daily_data, start_date, end_date, EMA7, EMA14))
+    plots.append(plot_with_rsi(daily_data, start_date, end_date, RSI))
+    plots.append(plot_with_macd(daily_data, start_date, end_date, MACD, SIGNAL_LINE))
+    plots.append(plot_with_bollinger_bands(daily_data, start_date, end_date, BOLLINGER_SMA, UPPER_BAND_BB, LOWER_BAND_BB))
+    plots.append(plot_with_atr(daily_data, start_date, end_date, ATR))
+    plots.append(plot_with_stochastic(daily_data, start_date, end_date, K, D))
+    plots.append(plot_with_obv(daily_data, start_date, end_date, OBV))
     return plots
 
 
-# Define timezone
+
 timezone = pytz.timezone("America/New_York")
-
-# Set Streamlit page configuration
 st.set_page_config(layout="wide", page_title="BitAnalytica")
-
-# Title
 st.markdown(
     """
     <div style="text-align: center; padding-top: 100px;">
@@ -70,19 +115,17 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Initialize pipelines and models
-textDataPipeline, bitcoinDataPipeline, x_scaler, y_high_scaler, y_low_scaler, high_model, low_model = initialize_pipelines_and_models()
 
-# Initialize predictions with default values
+
+textDataPipeline, bitcoinDataPipeline, x_scaler, y_high_scaler, y_low_scaler, high_model, low_model = initialize_pipelines_and_models()
 if 'high_pred' not in st.session_state or 'low_pred' not in st.session_state:
-    # Create placeholders for the initial run
     st.session_state.high_pred = None
     st.session_state.low_pred = None
 
-# Create two columns for layout
+
+### Creating two columns for first row
 col1, col2 = st.columns([8, 2])
 
-# Plot the hourly data chart in the left column
 with col1:
     st.markdown(
         """
@@ -95,7 +138,6 @@ with col1:
     fig = plot_hourly_data(bitcoinDataPipeline)
     st.plotly_chart(fig, use_container_width=True)
 
-# Display predictions on the right column
 with col2:
     st.markdown(
         """
@@ -145,10 +187,9 @@ with col2:
             </div>
         """, unsafe_allow_html=True)
 
-# Get the current time
-current_time = datetime.now(timezone)
 
-# Initial plotting of daily charts
+
+current_time = datetime.now(timezone)
 start_date = (datetime.now() - timedelta(days=45)).strftime('%Y-%m-%d')
 end_date = datetime.now().strftime('%Y-%m-%d')
 daily_plots = plot_daily_data(bitcoinDataPipeline, start_date, end_date)
@@ -165,6 +206,8 @@ for i in range(0, len(daily_plots), 2):
     cols = st.columns(2)
     for col, plot in zip(cols, daily_plots[i:i+2]):
         col.plotly_chart(plot, use_container_width=True)
+
+
 
 # Check if it's time to update the predictions and plots (every 24 hours at 7 AM UTC-4)
 if current_time.hour == 7 and current_time.minute == 0:
@@ -185,10 +228,8 @@ if current_time.hour == 7 and current_time.minute == 0:
         </div>
     """, unsafe_allow_html=True)
 
-    # Update the daily charts
     daily_plots = plot_daily_data(bitcoinDataPipeline, start_date, end_date)
     
-    # Plot each technical indicator chart in a grid layout
     for i in range(0, len(daily_plots), 2):
         cols = st.columns(2)
         for col, plot in zip(cols, daily_plots[i:i+2]):
@@ -203,7 +244,7 @@ if (current_time - st.session_state.last_refresh_time).seconds > 3600:
 
 
 
-# Streamlit layout settings
+### Streamlit layout settings
 st.markdown(
     """
     <style>
@@ -235,7 +276,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Footer
+### Footer
 st.markdown(
     """
     <div class="footer">
