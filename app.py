@@ -5,7 +5,7 @@ from text_data_pipeline import TextDataPipeline
 from btc_data_pipeline import BitcoinDataPipeline
 from config import LLM
 from app_utils import load_models, getData, predict_price
-from plot_utils import plot_all_indicators
+from plot_utils import plot_all_indicators, plot_with_sma_or_ema, plot_with_rsi
 
 @st.cache_resource
 def initialize_pipelines_and_models():
@@ -21,7 +21,7 @@ def initialize_pipelines_and_models():
 
 def plot_hourly_data(bitcoinDataPipeline):
     hourly_data = bitcoinDataPipeline.getHourlyData()
-    start_date = (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')
+    start_date = (datetime.now() - timedelta(days=14)).strftime('%Y-%m-%d')
     end_date = datetime.now().strftime('%Y-%m-%d')
     fig = plot_all_indicators(hourly_data, start_date, end_date)
     return fig
@@ -117,7 +117,6 @@ with col2:
             </div>
         """, unsafe_allow_html=True)
 
-
 # Get the current time
 current_time = datetime.now(timezone)
 
@@ -164,3 +163,24 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+# Plot three additional charts below the main columns
+st.markdown("---")
+
+chart_col1, chart_col2, chart_col3 = st.columns(3)
+start_date = datetime.now().strftime('%Y-%m-%d')
+end_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+with chart_col1:
+    st.subheader("SMA7")
+    sma7_fig = plot_with_sma_or_ema(bitcoinDataPipeline.getHourlyData(), start_date, end_date, 'SMA_7')
+    st.plotly_chart(sma7_fig, use_container_width=True)
+
+with chart_col2:
+    st.subheader("EMA7")
+    ema7_fig = plot_with_sma_or_ema(bitcoinDataPipeline.getHourlyData(), start_date, end_date, 'EMA_7')
+    st.plotly_chart(ema7_fig, use_container_width=True)
+
+with chart_col3:
+    st.subheader("RSI")
+    rsi_fig = plot_with_rsi(bitcoinDataPipeline.getHourlyData(), start_date, end_date, 'RSI')
+    st.plotly_chart(rsi_fig, use_container_width=True)
