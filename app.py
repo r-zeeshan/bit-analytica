@@ -84,7 +84,14 @@ col1, col2 = st.columns([8, 2])
 
 # Plot the hourly data chart in the left column
 with col1:
-    st.subheader("Bitcoin Hourly Data with Technical Indicators")
+    st.markdown(
+        """
+        <div style="text-align: center;">
+            <h2>Bitcoin Hourly Data with Technical Indicators</h2>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     fig = plot_hourly_data(bitcoinDataPipeline)
     st.plotly_chart(fig, use_container_width=True)
 
