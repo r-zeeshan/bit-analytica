@@ -108,7 +108,7 @@ timezone = pytz.timezone("America/New_York")
 st.set_page_config(layout="wide", page_title="BitAnalytica")
 st.markdown(
     """
-    <div style="text-align: center; padding-top: 100px;">
+    <div style="text-align: center; padding-top: 30px;">
         <h1>BitAnalytica</h1>
     </div>
     """,
