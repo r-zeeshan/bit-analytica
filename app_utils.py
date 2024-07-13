@@ -1,6 +1,10 @@
 from tensorflow.keras.models import load_model
 from pytorch_tabnet.tab_model import TabNetRegressor
+from datetime import datetime, timedelta
+import pandas as pd
 import pickle
+
+
 
 def load_models():
     """
@@ -47,12 +51,10 @@ def getData(textDataPipeline, bitcoinDataPipeline, scaler):
     sentiment_score = textDataPipeline.getSentimentScoreForPast24Hours()
     bitcoin_data = bitcoinDataPipeline.getLatestBitcoinData()
     
-    from datetime import datetime, timedelta
     date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
     bitcoin_data = bitcoin_data.loc[date]
     sentiment_score = sentiment_score.loc[date]
 
-    import pandas as pd
     data =  pd.DataFrame([pd.concat([bitcoin_data, sentiment_score], axis= 0)])
     return scaler.transform(data)
 
