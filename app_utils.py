@@ -1,3 +1,7 @@
+from tensorflow.keras.models import load_model
+from pytorch_tabnet.tab_model import TabNetRegressor
+import pickle
+
 def load_models():
     """
     Load the pre-trained models and scalers used for prediction.
@@ -9,9 +13,6 @@ def load_models():
         high_model (object): The pre-trained model for high prediction.
         low_model (object): The pre-trained model for low prediction.
     """
-    from tensorflow.keras.models import load_model
-    from pytorch_tabnet.tab_model import TabNetRegressor
-    import pickle
 
     with open('models/scalers/x_scaler.pkl', 'rb') as f:
         x_scaler = pickle.load(f)
