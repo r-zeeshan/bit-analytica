@@ -103,9 +103,6 @@ The Yahoo Finance API, accessed via the `yfinance` Python library, was used to r
 
 The data starts from 2017 because it is the earliest year for which comprehensive news data was available from the GDELT API. This limitation was due to the availability of historical news data.
 
-## License
-
-
 ## Disclaimer
 
 The information provided on this website is for informational purposes only and is not intended as financial advice. Always do your own research before making any investment decisions.
