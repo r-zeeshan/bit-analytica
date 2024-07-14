@@ -405,12 +405,11 @@ def plot_all_indicators(data, start_date, end_date):
     add_candlestick_trace(fig, data)
 
     from config import SMA7, SMA14, EMA7, EMA14, BOLLINGER_SMA
-    from config import UPPER_BAND_BB, LOWER_BAND_BB, OBV
+    from config import UPPER_BAND_BB, LOWER_BAND_BB
 
     indicators = {
         'sma_ema': [SMA7, SMA14, EMA7, EMA14],
-        'bollinger_bands': [BOLLINGER_SMA, UPPER_BAND_BB, LOWER_BAND_BB],
-        'obv': OBV
+        'bollinger_bands': [BOLLINGER_SMA, UPPER_BAND_BB, LOWER_BAND_BB]
     }
 
     for indicator, columns in indicators.items():
