@@ -105,7 +105,6 @@ The data starts from 2017 because it is the earliest year for which comprehensiv
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## Disclaimer
 
