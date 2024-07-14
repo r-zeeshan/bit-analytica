@@ -1,5 +1,3 @@
-pandas
-yfinance
 lxml
 lxml_html_clean
 newspaper3k
@@ -10,3 +8,5 @@ nltk
 tensorflow
 plotly
 pytorch-tabnet
+pandas
+yfinance
