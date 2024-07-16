@@ -52,11 +52,21 @@ def getData(textDataPipeline, bitcoinDataPipeline, scaler):
     bitcoin_data = bitcoinDataPipeline.getLatestBitcoinData()
     
     date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-    bitcoin_data = bitcoin_data.loc[date]
-    sentiment_score = sentiment_score.loc[date]
+    
+    try:
+        bitcoin_data = bitcoin_data.loc[date]
+        sentiment_score = sentiment_score.loc[date]
+    except KeyError:
+        try:
+            bitcoin_data = bitcoin_data.iloc[-2]
+            sentiment_score = sentiment_score.iloc[-2]
+        except IndexError:
+            bitcoin_data = bitcoin_data.iloc[-1]
+            sentiment_score = sentiment_score.iloc[-1]
 
-    data =  pd.DataFrame([pd.concat([bitcoin_data, sentiment_score], axis= 0)])
+    data = pd.DataFrame([pd.concat([bitcoin_data, sentiment_score], axis=0)])
     return scaler.transform(data)
+
 
 
 def predict_price(model, data, scaler, flag=False):
