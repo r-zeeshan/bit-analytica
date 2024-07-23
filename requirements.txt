@@ -10,3 +10,5 @@ plotly
 pytorch-tabnet
 pandas
 yfinance
+fastapi
+uvicorn
