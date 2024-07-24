@@ -52,3 +52,23 @@ class InputData(BaseModel):
     k: float
     d: float
     obv: float
+
+
+@app.post("/predict/")
+def predict(data: InputData):
+    input_df = pd.DataFrame([data.dict()])
+    scaled_input = x_scaler.transform(input_df)
+
+    high_pred = high_model.predict(scaled_input.reshape((scaled_input.shape[0], 1, scaled_input.shape[1])))
+    low_pred = low_model.predict(scaled_input)
+
+    high_pred = y_high_scaler.inverse_transform(high_pred)
+    low_pred = y_low_scaler.inverse_transform(low_pred)
+
+    return {
+        "predicted_high": high_pred.flatten()[0],
+        "predicted_low": low_pred.flatten()[0]
+    }
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
