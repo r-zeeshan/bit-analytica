@@ -1,5 +1,3 @@
-# data_scrapper.py
-
 import requests
 import pandas as pd
 from newspaper import Article
