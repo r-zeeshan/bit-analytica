@@ -1,6 +1,6 @@
 import plotly.graph_objects as go
 
-TEMPLATE = 'plotly_dark'
+TEMPLATE = 'plotly_dark' ### DEFINING A GLOBAL THEME FOR THE CHARTS
 
 def add_candlestick_trace(fig, data):
     """
