@@ -4,7 +4,7 @@ import pytz
 from text_data_pipeline import TextDataPipeline
 from btc_data_pipeline import BitcoinDataPipeline
 from config import LLM
-from app_utils import load_models, getData, predict_price
+from app_utils import load_models, getData, predict_price, save_predictions
 from plot_utils import plot_all_indicators, plot_with_sma, plot_with_ema, plot_with_rsi, plot_with_macd, plot_with_bollinger_bands, plot_with_atr, plot_with_stochastic, plot_with_obv
 
 @st.cache_resource
@@ -50,18 +50,9 @@ def update_predictions(textDataPipeline, bitcoinDataPipeline, x_scaler, high_mod
     """
     Updates the predictions for the high and low prices of Bitcoin based on the given data.
 
-    Parameters:
-    - textDataPipeline: The pipeline for processing text data.
-    - bitcoinDataPipeline: The pipeline for processing Bitcoin data.
-    - x_scaler: The scaler for scaling the input data.
-    - high_model: The model for predicting the high price.
-    - y_high_scaler: The scaler for scaling the high price predictions.
-    - low_model: The model for predicting the low price.
-    - y_low_scaler: The scaler for scaling the low price predictions.
-
     Returns:
-    - high_pred: The predicted high price of Bitcoin.
-    - low_pred: The predicted low price of Bitcoin.
+        high_pred (float): Predicted high price.
+        low_pred (float): Predicted low price.
     """
     with st.spinner("Getting sentiment score..."):
         data = getData(textDataPipeline, bitcoinDataPipeline, x_scaler)
@@ -71,6 +62,9 @@ def update_predictions(textDataPipeline, bitcoinDataPipeline, x_scaler, high_mod
     
     with st.spinner("Predicting low price..."):
         low_pred = predict_price(low_model, data, y_low_scaler, flag=False)
+    
+    # Save predictions to CSV
+    save_predictions(high_pred, low_pred)
     
     return high_pred, low_pred
 
