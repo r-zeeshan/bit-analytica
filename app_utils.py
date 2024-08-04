@@ -99,11 +99,16 @@ def save_predictions(high_pred, low_pred):
         high_pred (float): Predicted high price.
         low_pred (float): Predicted low price.
     """
+    # Ensure the data folder exists
     os.makedirs('data', exist_ok=True)
+    
+    # Define the file path
     file_path = os.path.join('data', 'predictions.csv')
     
+    # Get the current date
     current_date = datetime.now().strftime('%Y-%m-%d')
     
+    # Create a DataFrame for the new prediction
     new_data = pd.DataFrame({
         'date': [current_date],
         'predicted_high': [high_pred],
@@ -112,15 +117,18 @@ def save_predictions(high_pred, low_pred):
 
     # Check if the file already exists
     if os.path.exists(file_path):
+        # Load existing data
         existing_data = pd.read_csv(file_path)
 
         if current_date in existing_data['date'].values:
             # Update existing predictions for the day
             existing_data.loc[existing_data['date'] == current_date, ['predicted_high', 'predicted_low']] = [high_pred, low_pred]
         else:
-            # Append new data
-            existing_data = existing_data.append(new_data, ignore_index=True)
+            # Concatenate the new data with existing data
+            existing_data = pd.concat([existing_data, new_data], ignore_index=True)
         
+        # Save the updated data
         existing_data.to_csv(file_path, index=False)
     else:
+        # Save new data
         new_data.to_csv(file_path, index=False)
