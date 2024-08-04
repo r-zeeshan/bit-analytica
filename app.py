@@ -42,7 +42,7 @@ def plot_hourly_data(bitcoinDataPipeline):
     hourly_data = bitcoinDataPipeline.getHourlyData()
     start_date = (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')
     end_date = datetime.now().strftime('%Y-%m-%d')
-    fig = plot_all_indicators(hourly_data, start_date, end_date)
+    fig = plot_all_indicators(hourly_data, start_date, end_date, prediction_file='data/predictions.csv')
     return fig
 
 
