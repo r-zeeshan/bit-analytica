@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 import pickle
 import os
+from plot_utils import plot_all_indicators, plot_with_sma, plot_with_ema, plot_with_rsi, plot_with_macd, plot_with_bollinger_bands, plot_with_atr, plot_with_stochastic, plot_with_obv
 
 
 
@@ -89,6 +90,72 @@ def predict_price(model, data, scaler, flag=False):
     pred = scaler.inverse_transform(pred)
     return pred.flatten()[0]
 
+def plot_hourly_data(bitcoinDataPipeline):
+    """
+    Plots the hourly data for Bitcoin.
+
+    Args:
+        bitcoinDataPipeline: An instance of the BitcoinDataPipeline class.
+
+    Returns:
+        fig: The matplotlib figure object containing the plotted data.
+    """
+    hourly_data = bitcoinDataPipeline.getHourlyData()
+    start_date = (datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')
+    end_date = datetime.now().strftime('%Y-%m-%d')
+    fig = plot_all_indicators(hourly_data, start_date, end_date, prediction_file='data/predictions.csv')
+    return fig
+
+
+def update_predictions(textDataPipeline, bitcoinDataPipeline, x_scaler, high_model, y_high_scaler, low_model, y_low_scaler):
+    """
+    Updates the predictions for the high and low prices of Bitcoin based on the given data.
+
+    Returns:
+        high_pred (float): Predicted high price.
+        low_pred (float): Predicted low price.
+    """
+    with st.spinner("Getting sentiment score..."):
+        data = getData(textDataPipeline, bitcoinDataPipeline, x_scaler)
+    
+    with st.spinner("Predicting high price..."):
+        high_pred = predict_price(high_model, data, y_high_scaler, flag=True)
+    
+    with st.spinner("Predicting low price..."):
+        low_pred = predict_price(low_model, data, y_low_scaler, flag=False)
+    
+    # Save predictions to CSV
+    save_predictions(high_pred, low_pred)
+    
+    return high_pred, low_pred
+
+
+def plot_daily_data(bitcoinDataPipeline, start_date, end_date):
+    """
+    Plots various technical indicators based on daily Bitcoin data.
+
+    Args:
+        bitcoinDataPipeline (object): An object representing the Bitcoin data pipeline.
+        start_date (str): The start date for the data range.
+        end_date (str): The end date for the data range.
+
+    Returns:
+        list: A list of plots for each technical indicator.
+
+    """
+    from config import SMA7, SMA14, EMA7, EMA14, RSI, MACD, SIGNAL_LINE ,BOLLINGER_SMA
+    from config import UPPER_BAND_BB, LOWER_BAND_BB, ATR, K, D, OBV
+    daily_data = bitcoinDataPipeline.getLatestBitcoinData()
+    plots = []
+    plots.append(plot_with_sma(daily_data, start_date, end_date, SMA7, SMA14))
+    plots.append(plot_with_ema(daily_data, start_date, end_date, EMA7, EMA14))
+    plots.append(plot_with_rsi(daily_data, start_date, end_date, RSI))
+    plots.append(plot_with_macd(daily_data, start_date, end_date, MACD, SIGNAL_LINE))
+    plots.append(plot_with_bollinger_bands(daily_data, start_date, end_date, BOLLINGER_SMA, UPPER_BAND_BB, LOWER_BAND_BB))
+    plots.append(plot_with_atr(daily_data, start_date, end_date, ATR))
+    plots.append(plot_with_stochastic(daily_data, start_date, end_date, K, D))
+    plots.append(plot_with_obv(daily_data, start_date, end_date, OBV))
+    return plots
 
 
 def save_predictions(high_pred, low_pred):
