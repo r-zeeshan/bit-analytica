@@ -1,5 +1,6 @@
 import plotly.graph_objects as go
 import pandas as pd
+import os
 
 TEMPLATE = 'plotly_dark' ### DEFINING A GLOBAL THEME FOR THE CHARTS
 
@@ -387,7 +388,8 @@ def plot_with_obv(data, start_date, end_date, column):
 
     return fig
 
-def plot_all_indicators(data, start_date, end_date, prediction_file):
+
+def plot_all_indicators(data, start_date, end_date, prediction_file='data/predictions.csv'):
     """
     Plots a candlestick chart with all indicators toggled off initially and includes prediction markers.
 
@@ -433,26 +435,30 @@ def plot_all_indicators(data, start_date, end_date, prediction_file):
                 visible='legendonly'
             ))
 
-    predictions = pd.read_csv(prediction_file)
-    predictions['date'] = pd.to_datetime(predictions['date'])
-    predictions = predictions.set_index('date')
-    predictions = predictions.loc[start_date:end_date]
+    # Check if predictions.csv exists and is not empty
+    if os.path.exists(prediction_file) and os.path.getsize(prediction_file) > 0:
+        predictions = pd.read_csv(prediction_file)
+        if not predictions.empty:
+            predictions['date'] = pd.to_datetime(predictions['date'])
+            predictions = predictions.set_index('date')
+            predictions = predictions.loc[start_date:end_date]
 
-    fig.add_trace(go.Scatter(
-        x=predictions.index,
-        y=predictions['predicted_high'],
-        mode='markers',
-        marker=dict(color='green', symbol='triangle-up', size=10),
-        name='Predicted High'
-    ))
+            if not predictions.empty:
+                fig.add_trace(go.Scatter(
+                    x=predictions.index,
+                    y=predictions['predicted_high'],
+                    mode='markers',
+                    marker=dict(color='green', symbol='triangle-up', size=10),
+                    name='Predicted High'
+                ))
 
-    fig.add_trace(go.Scatter(
-        x=predictions.index,
-        y=predictions['predicted_low'],
-        mode='markers',
-        marker=dict(color='red', symbol='triangle-down', size=10),
-        name='Predicted Low'
-    ))
+                fig.add_trace(go.Scatter(
+                    x=predictions.index,
+                    y=predictions['predicted_low'],
+                    mode='markers',
+                    marker=dict(color='red', symbol='triangle-down', size=10),
+                    name='Predicted Low'
+                ))
 
     fig.update_layout(
         title='Bitcoin Candlestick Chart with Indicators',
