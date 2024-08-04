@@ -1,4 +1,5 @@
 import plotly.graph_objects as go
+import pandas as pd
 
 TEMPLATE = 'plotly_dark' ### DEFINING A GLOBAL THEME FOR THE CHARTS
 
@@ -386,15 +387,15 @@ def plot_with_obv(data, start_date, end_date, column):
 
     return fig
 
-
-def plot_all_indicators(data, start_date, end_date):
+def plot_all_indicators(data, start_date, end_date, prediction_file):
     """
-    Plots a candlestick chart with all indicators toggled off initially.
+    Plots a candlestick chart with all indicators toggled off initially and includes prediction markers.
 
     Args:
         data (pandas.DataFrame): The data containing the candlestick and indicators data.
         start_date (str): The start date for the data to be plotted.
         end_date (str): The end date for the data to be plotted.
+        prediction_file (str): Path to the CSV file containing predictions.
 
     Returns:
         plotly.graph_objects.Figure: The figure object representing the candlestick chart with all indicators.
@@ -404,6 +405,7 @@ def plot_all_indicators(data, start_date, end_date):
     fig = go.Figure()
     add_candlestick_trace(fig, data)
 
+    # Add indicators
     from config import SMA7, SMA14, EMA7, EMA14, BOLLINGER_SMA
     from config import UPPER_BAND_BB, LOWER_BAND_BB
 
@@ -431,6 +433,27 @@ def plot_all_indicators(data, start_date, end_date):
                 visible='legendonly'
             ))
 
+    predictions = pd.read_csv(prediction_file)
+    predictions['date'] = pd.to_datetime(predictions['date'])
+    predictions = predictions.set_index('date')
+    predictions = predictions.loc[start_date:end_date]
+
+    fig.add_trace(go.Scatter(
+        x=predictions.index,
+        y=predictions['predicted_high'],
+        mode='markers',
+        marker=dict(color='green', symbol='triangle-up', size=10),
+        name='Predicted High'
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=predictions.index,
+        y=predictions['predicted_low'],
+        mode='markers',
+        marker=dict(color='red', symbol='triangle-down', size=10),
+        name='Predicted Low'
+    ))
+
     fig.update_layout(
         title='Bitcoin Candlestick Chart with Indicators',
         xaxis_title='Date',
@@ -451,5 +474,3 @@ def plot_all_indicators(data, start_date, end_date):
     )
 
     return fig
-
-
