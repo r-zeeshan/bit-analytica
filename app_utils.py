@@ -7,7 +7,6 @@ import os
 from plot_utils import plot_all_indicators, plot_with_sma, plot_with_ema, plot_with_rsi, plot_with_macd, plot_with_bollinger_bands, plot_with_atr, plot_with_stochastic, plot_with_obv
 
 
-
 def load_models():
     """
     Load the pre-trained models and scalers used for prediction.
@@ -106,28 +105,6 @@ def plot_hourly_data(bitcoinDataPipeline):
     fig = plot_all_indicators(hourly_data, start_date, end_date, prediction_file='data/predictions.csv')
     return fig
 
-
-def update_predictions(textDataPipeline, bitcoinDataPipeline, x_scaler, high_model, y_high_scaler, low_model, y_low_scaler):
-    """
-    Updates the predictions for the high and low prices of Bitcoin based on the given data.
-
-    Returns:
-        high_pred (float): Predicted high price.
-        low_pred (float): Predicted low price.
-    """
-    with st.spinner("Getting sentiment score..."):
-        data = getData(textDataPipeline, bitcoinDataPipeline, x_scaler)
-    
-    with st.spinner("Predicting high price..."):
-        high_pred = predict_price(high_model, data, y_high_scaler, flag=True)
-    
-    with st.spinner("Predicting low price..."):
-        low_pred = predict_price(low_model, data, y_low_scaler, flag=False)
-    
-    # Save predictions to CSV
-    save_predictions(high_pred, low_pred)
-    
-    return high_pred, low_pred
 
 
 def plot_daily_data(bitcoinDataPipeline, start_date, end_date):
