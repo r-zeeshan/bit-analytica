@@ -1,3 +1,7 @@
+"""
+Author: Zeeshan Hameed
+"""
+
 from transformers import BertTokenizer, BertForSequenceClassification
 from data_scrapper import fetch_24hrs
 from text_utils import clean_text, get_sentiment, aggregate_sentiment
