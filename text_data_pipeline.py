@@ -32,6 +32,7 @@ class TextDataPipeline:
             llm (str): The pre-trained language model to be used for tokenization and sentiment classification.
         """
         nltk.download('punkt')
+        nltk.download('punkt_tab')
         nltk.download('stopwords')
         nltk.download('wordnet')
         self.tokenizer = BertTokenizer.from_pretrained(llm)
