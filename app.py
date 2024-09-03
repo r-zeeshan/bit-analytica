@@ -10,6 +10,14 @@ from btc_data_pipeline import BitcoinDataPipeline
 from config import LLM
 from app_utils import *
 
+import nltk
+
+# Download the necessary data files
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+
 @st.cache_resource
 def initialize_pipelines_and_models():
     """
